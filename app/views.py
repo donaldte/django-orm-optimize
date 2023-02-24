@@ -40,14 +40,20 @@ def generate_random_data(request):
     return render(request, 'random_data.html')
 
 
-# Mesure le temps d'exécution d'une requête donnée
-def measure_query_time(query):
+# Mesure le temps d'exécution  requête donnée
+def measure_query_time(query, sub_querry_1=None, sub_querry_2=None):
+    
     start_time = time.time()
-    results = list(query)
+    
+    books = query
+    if sub_querry_1=='YES': authorS = [book.author for book in books]
+    if sub_querry_2=='YES': tags = [book.tags.all() for book in books ]
+    
     end_time = time.time()
+    
     query_time = end_time - start_time
-    return results, query_time
-
+    
+    return  query_time
 
 
 
@@ -57,10 +63,10 @@ def view_test_without_and_with(request):
     # clear cache
     cache.clear()
     
-    books, without_optimize_time = measure_query_time(Book.objects.all())
-    books, with_select_optimize_time = measure_query_time(Book.objects.all().select_related('author'))
-    books, with_prefect_optimize_time = measure_query_time(Book.objects.all().prefetch_related('tags'))
-    books, with_prefect_and_related_time = measure_query_time(Book.objects.all().select_related('author').prefetch_related('tags'))
+    without_optimize_time = measure_query_time(query=Book.objects.all(), sub_querry_1='YES', sub_querry_2='YES')
+    with_select_optimize_time = measure_query_time(query=Book.objects.all().select_related('author'), sub_querry_2='YES')
+    with_prefect_optimize_time = measure_query_time(query=Book.objects.all().prefetch_related('tags'), sub_querry_1='YES')
+    with_prefect_and_related_time = measure_query_time(query=Book.objects.all().select_related('author').prefetch_related('tags'))
 
  
     
