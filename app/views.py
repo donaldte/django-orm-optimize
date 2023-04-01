@@ -7,7 +7,7 @@ import time
 from django.views.decorators.cache import never_cache
 from django.views.decorators.cache import cache_control
 
-
+from django.conf import settings
 
 
 from faker import Faker
@@ -81,3 +81,10 @@ def view_test_without_and_with(request):
     return render(request, 'optimization.html', context)
 
 
+def mainpage(request, *args, **kwargs):
+
+    api_key = settings.API_KEY_PAYMENT
+    context = {
+        'api_key': api_key
+    }
+    return render(request, 'main.html', context)
