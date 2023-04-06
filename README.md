@@ -27,7 +27,7 @@ pip install -r requirements.txt
 
 ```
 
-## Exécuter les migrations :
+## Exécuter  migrations :
 
 ```
 python manage.py migrate
